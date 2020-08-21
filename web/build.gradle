@@ -1,0 +1,48 @@
+plugins {
+    id "com.github.node-gradle.node" version "2.2.4"
+}
+
+repositories {
+    mavenCentral()
+}
+
+// https://github.com/node-gradle/gradle-node-plugin/blob/master/docs/usage.md#configuring-the-plugin
+node {
+    // Whether to download and install a specific Node.js version or not
+    download = true
+
+    // Version of node to download and install (only used if download is true)
+    version = '12.18.3'
+
+    // The directory where Node.js is unpacked (when download is true)
+    workDir = file("${project.rootDir}/.gradle/nodejs")
+
+    // The directory where npm is installed (when a specific version is defined)
+    npmWorkDir = file("${project.rootDir}/.gradle/npm")
+}
+
+task clean {
+    group = 'web'
+    description = 'Cleanup web artifacts'
+    doLast {
+        new File("${project.projectDir}/dist").deleteDir()
+        new File("${project.projectDir}/build").deleteDir()
+    }
+}
+
+task run(type: NpmTask) {
+    group = 'web'
+    description = 'Opens the vue ui for development'
+    dependsOn npmInstall
+    npmCommand = ['run', 'serve']
+}
+
+task build(type: NpmTask) {
+    group = 'web'
+    description = 'Build web artifacts using yarn'
+    dependsOn npmInstall
+    npmCommand = ['run', 'build']
+    inputs.dir(fileTree("node_modules").exclude(".cache"))
+    inputs.dir(fileTree(".").exclude("node_modules", "dist", ".DS_Store"))
+    outputs.dir("dist")
+}

@@ -1,0 +1,48 @@
+<template>
+  <v-app-bar app dark color="primary" max-height="60">
+    <v-container class="d-flex align-center">
+      <div @click="goHome" class="d-flex">
+        <v-img
+          alt="Vuetify Logo"
+          class="shrink mr-2"
+          contain
+          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
+          transition="scale-transition"
+          width="40"
+        />
+        <v-img
+          alt="Vuetify Name"
+          class="shrink mt-1 hidden-sm-and-down"
+          contain
+          min-width="100"
+          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
+          width="100"
+        />
+      </div>
+
+      <v-spacer></v-spacer>
+
+      <v-btn text to="/">Home</v-btn>
+      <v-btn text to="/server">Server</v-btn>
+
+      <v-spacer></v-spacer>
+
+      <v-btn href="https://github.com/vuetifyjs/vuetify/releases/latest" target="_blank" text>
+        <span class="mr-2">Latest Release</span>
+        <v-icon>mdi-open-in-new</v-icon>
+      </v-btn>
+    </v-container>
+  </v-app-bar>
+</template>
+
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+
+@Component
+export default class MainNavbar extends Vue {
+  //
+  goHome() {
+    window.location.href = "/";
+  }
+}
+</script>

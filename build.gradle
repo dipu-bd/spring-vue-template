@@ -1,0 +1,43 @@
+allprojects {
+    group = 'com.example.template'
+    version = '0.0.1-SNAPSHOT'
+}
+
+task bootWeb {
+    group = 'application'
+    description = 'Boot starts frontend in development mode'
+    dependsOn ':web:run'
+}
+
+task clean(type: GradleBuild) {
+    group = 'build'
+    description = 'Clean all web and api assets'
+    tasks = [
+            ':web:clean',
+            ':api:clean',
+    ]
+    doLast {
+        new File("${project.projectDir}/dist").deleteDir()
+    }
+}
+
+task copyWebToStatic(type: Copy) {
+    from "${project.projectDir}/web/dist"
+    into "${project.projectDir}/api/src/main/resources/static"
+}
+
+task copyToDist(type: Copy) {
+    from "${project.projectDir}/api/build/distributions"
+    into "${project.projectDir}/dist/"
+}
+
+task publish(type: GradleBuild) {
+    group = 'application'
+    description = 'Build and deploy application into a single tar file'
+    tasks = [
+            ':web:build',
+            'copyWebToStatic',
+            ':api:distTar',
+            'copyToDist'
+    ]
+}
